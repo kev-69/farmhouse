@@ -1,7 +1,6 @@
 const UserServices = require('../services/auth-services');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { Op } = require('sequelize');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -14,10 +13,9 @@ const {
     verifyPasswordResetToken
 } = require('../utils/token-util');
 
-const { 
+const {
     sendVerificationEmail,
-    sendPasswordResetEmail,
-    // sendEmail 
+    sendPasswordResetEmail
 } = require('../utils/email-util');
 
 const registerUser = async (req, res) => {
@@ -102,51 +100,41 @@ const verifyEmail = async (req, res) => {
     }
 }
 
-// const requestPasswordReset = async (req, res) => {
-//     try {
-//         const { email } = req.body;
-
-//         // Check if user exists
-//         const user = await UserServices.getUserByEmail(email);
-//         if (!user) {
-//             return res.status(400).json({ error: 'User not found.' });
-//         }
-
-//         // Generate password reset token
-//         const resetToken = generatePasswordResetToken(user.id);
-
-//         // Send password reset email
-//         await sendPasswordResetEmail(email, resetToken);
-
-//         res.status(200).json({ message: 'Password reset email sent.' });
-//     } catch (error) {
-//         console.error('Error requesting password reset:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// }
-
 const resetPassword = async (req, res) => {
     try {
-        const { token, newPassword } = req.body;
+        const { email, token, newPassword } = req.body;
 
-        // Verify the token
-        const userId = verifyPasswordResetToken(token);
-        if (!userId) {
-            return res.status(400).json({ error: 'Invalid or expired token.' });
+        if (email) {
+            // Request password reset
+            const user = await UserServices.getUserByEmail(email);
+            if (!user) {
+                return res.status(400).json({ error: 'User not found.' });
+            }
+
+            const resetToken = generatePasswordResetToken(user.id);
+            await sendPasswordResetEmail(email, resetToken);
+
+            return res.status(200).json({ message: 'Password reset email sent.' });
+        } else if (token && newPassword) {
+            // Reset password
+            const userId = verifyPasswordResetToken(token);
+            if (!userId) {
+                return res.status(400).json({ error: 'Invalid or expired token.' });
+            }
+
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            await UserServices.updateUser(userId, { password: hashedPassword });
+
+            return res.status(200).json({ message: 'Password reset successfully.' });
+        } else {
+            return res.status(400).json({ error: 'Invalid request.' });
         }
-
-        // Hash the new password
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-        // Update user password
-        await UserServices.updateUser(userId, { password: hashedPassword });
-
-        res.status(200).json({ message: 'Password reset successfully.' });
     } catch (error) {
-        console.error('Error resetting password:', error);
+        console.error('Error handling password reset:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
 
 const getUserProfile = async (req, res) => {
     try {
@@ -217,28 +205,6 @@ const getAllUsers = async (req, res) => {
     }
 }
 
-// const forgotPassword = async (req, res) => {
-//     try {
-//         const { email } = req.body;
-
-//         // Check if user exists
-//         const user = await UserServices.getUserByEmail(email);
-//         if (!user) {
-//             return res.status(400).json({ error: 'User not found.' });
-//         }
-
-//         // Generate password reset token
-//         const resetToken = generatePasswordResetToken(user.id);
-
-//         // Send password reset email
-//         await sendPasswordResetEmail(email, resetToken);
-
-//         res.status(200).json({ message: 'Password reset email sent.' });
-//     } catch (error) {
-//         console.error('Error sending password reset email:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// }
 
 const changePassword = async (req, res) => {
     try {
