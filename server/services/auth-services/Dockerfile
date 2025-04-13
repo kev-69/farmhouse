@@ -5,15 +5,8 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 COPY src ./src
 COPY .env .
-COPY .env.example .env.example
-COPY .env.development .env.development
-COPY .env.production .env.production
-COPY .env.test .env.test
-COPY .env.staging .env.staging
-COPY .env.local .env.local
-COPY .env.development.local .env.development.local
 
-RUN npm install --production --silent
+RUN npm install --silent && npm install typescript --save-dev --silent
 RUN npm run build
 RUN npm prune --production
 RUN npm cache clean --force
