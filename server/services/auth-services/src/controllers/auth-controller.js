@@ -205,7 +205,6 @@ const getAllUsers = async (req, res) => {
     }
 }
 
-
 const changePassword = async (req, res) => {
     try {
         const userId = req.user.id; // Assuming the user ID is stored in the token
