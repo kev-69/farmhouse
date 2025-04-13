@@ -31,10 +31,7 @@ const UserServices = {
     async getUserByEmail(email) {
         try {
             const user = await User.findOne({ where: { email } });
-            if (!user) {
-                throw new Error('User not found');
-            }
-            return user;
+            return user; // Return null if user is not found
         } catch (error) {
             throw new Error('Error fetching user: ' + error.message);
         }
