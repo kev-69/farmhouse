@@ -1,17 +1,13 @@
 const User = require('../models/auth-model');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { Op } = require('sequelize');
-const { JWT_SECRET, JWT_EXPIRATION } = process.env;
-const { sendEmail } = require('../utils/email-util');
-
 
 const UserServices = {
     async createUser(userData) {
         try {
+            // console.log('Creating user with data:', userData);
             const user = await User.create(userData);
             return user;
         } catch (error) {
+            console.error('Validation error details:', error.errors);
             throw new Error('Error registering user: ' + error.message);
         }
     },
