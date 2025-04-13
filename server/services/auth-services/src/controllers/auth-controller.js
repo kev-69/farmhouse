@@ -42,10 +42,10 @@ const registerUser = async (req, res) => {
         });
 
         // Generate verification token
-        const verificationToken = generateVerificationToken(newUser.id);
+        // const verificationToken = generateVerificationToken(newUser.id);
 
         // Send verification email
-        await sendVerificationEmail(email, verificationToken);
+        // await sendVerificationEmail(email, verificationToken);
 
         res.status(201).json({ message: 'User registered successfully. Please verify your email.' });
     } catch (error) {
