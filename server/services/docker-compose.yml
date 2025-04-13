@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: farmhousepassword
+      POSTGRES_DB: auth-services
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  auth-services:
+    build:
+      context: ./auth-services
+      dockerfile: Dockerfile
+    container_name: auth-services
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5433
+      DB_USER: postgres
+      DB_PASSWORD: farmhousepassword
+      DB_NAME: auth-services
+      JWT_SECRET: 2c6e8cb3de74414a4381cc6b67eda14d810871938da4a45f9ea52cdf2747de362dcd687aa69bf747d81c4e7554e8b9cc1a68fac2937f59f845a90000681fb6f5
+      JWT_EXPIRATION: 1h
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
