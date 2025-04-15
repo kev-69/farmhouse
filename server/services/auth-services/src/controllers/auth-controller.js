@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const dotenv = require('dotenv');
 dotenv.config();
+
 const { JWT_SECRET, JWT_EXPIRATION } = process.env;
 
 const { 
