@@ -42,12 +42,12 @@ const registerUser = async (req, res) => {
         });
 
         // Generate verification token
-        // const verificationToken = generateVerificationToken(newUser.id);
+        const verificationToken = generateVerificationToken(newUser.id);
 
         // Send verification email
-        // await sendVerificationEmail(email, verificationToken);
+        await sendVerificationEmail(email, verificationToken);
 
-        res.status(201).json({ message: 'User registered successfully. Please verify your email.' });
+        res.status(201).json({ message: 'User registered successfully. Please verify your email.', user: newUser });
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -73,7 +73,7 @@ const loginUser = async (req, res) => {
         // Generate JWT token
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
 
-        res.status(200).json({ message: 'Login successful', token });
+        res.status(200).json({ message: 'Login successful', token, user });
     } catch (error) {
         console.error('Error logging in user:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -100,6 +100,7 @@ const verifyEmail = async (req, res) => {
     }
 }
 
+// for forgot password
 const resetPassword = async (req, res) => {
     try {
         const { email, token, newPassword } = req.body;
@@ -135,7 +136,6 @@ const resetPassword = async (req, res) => {
     }
 }
 
-
 const getUserProfile = async (req, res) => {
     try {
         const userId = req.user.id; // Assuming the user ID is stored in the token
@@ -161,7 +161,7 @@ const updateUserProfile = async (req, res) => {
         // Update user profile
         await UserServices.updateUser(userId, { username, first_name, last_name });
 
-        res.status(200).json({ message: 'Profile updated successfully.' });
+        res.status(200).json({ message: 'Profile updated successfully.', user: { username, first_name, last_name } });
     } catch (error) {
         console.error('Error updating user profile:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -205,6 +205,7 @@ const getAllUsers = async (req, res) => {
     }
 }
 
+// for when maybe a user is logged in and wants to change their password
 const changePassword = async (req, res) => {
     try {
         const userId = req.user.id; // Assuming the user ID is stored in the token
@@ -228,7 +229,7 @@ const changePassword = async (req, res) => {
         // Update user password
         await UserServices.updateUser(userId, { password: hashedNewPassword });
 
-        res.status(200).json({ message: 'Password changed successfully.' });
+        res.status(200).json({ message: 'Password changed successfully.', newPassword: hashedNewPassword });
     } catch (error) {
         console.error('Error changing password:', error);
         res.status(500).json({ error: 'Internal server error' });
