@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+dotenv.config();
 
 async function sendVerificationEmail(email, verificationToken) {
     try {
@@ -41,7 +43,8 @@ async function sendPasswordResetEmail(email, resetToken) {
     try {
         // Create a transporter object using SMTP transport
         const transporter = nodemailer.createTransport({
-            service: 'Gmail', // You can use other email services
+            host: process.env.EMAIL_HOST,
+            port: process.env.EMAIL_PORT,
             auth: {
                 user: process.env.EMAIL_USER, // Your email address
                 pass: process.env.EMAIL_PASSWORD // Your email password
