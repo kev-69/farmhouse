@@ -14,7 +14,7 @@ const sequelize = new Sequelize(
     }
 )
 
-console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
+// console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 
 sequelize.authenticate()
     .then(() => {
