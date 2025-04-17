@@ -3,8 +3,9 @@ const { DataTypes } = require('sequelize');
 
 const User = sequelize.define('User', {
     id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        // autoIncrement: true,
         primaryKey: true,
     },
     username: {
@@ -34,8 +35,8 @@ const User = sequelize.define('User', {
         defaultValue: false,
     },
 }, {
-    timestamps: true,
     tableName: 'users',
+    timestamps: true,
 });
 
 module.exports = User;
