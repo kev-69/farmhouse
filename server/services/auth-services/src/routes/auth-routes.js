@@ -17,10 +17,10 @@ const validateToken = require('../middlewares/token-middleware');
 
 
 // routes
-router.post('/register', registerUser);
+router.post('/register', validateEmail, registerUser);
 router.post('/login', validateLoginCredentials, loginUser);
 
-router.post('/verify-email', validateEmail, verifyEmail);
+router.get('/verify-email', verifyEmail);
 
 router.post('/reset-password', validateToken, validatePassword, resetPassword);
 router.post('/change-password', validateToken, validatePassword, changePassword);
