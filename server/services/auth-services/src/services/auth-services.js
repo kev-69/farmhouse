@@ -1,4 +1,4 @@
-const User = require('../models/auth-model');
+const User = require('../../../../shared/models/user-model');
 
 const UserServices = {
     async createUser(userData) {
