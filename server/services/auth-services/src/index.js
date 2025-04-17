@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const sequelize = require("./config/db-config");
+const sequelize = require("../../../shared/config/db-config");
 
 dotenv.config();
 
@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 // sync database
-sequelize.sync({ force: false })
+sequelize.sync({ force: false }) // force: true will drop the table if it already exists
     .then(() => {
         console.log("Database connected successfully!");
     })
