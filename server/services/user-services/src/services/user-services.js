@@ -46,6 +46,15 @@ const UserServices = {
         } catch (error) {
             throw new Error('Error fetching users: ' + error.message);
         }
+    },
+
+    async countUsers() {
+        try {
+            const count = await User.count();
+            return count;
+        } catch (error) {
+            throw new Error('Error counting users: ' + error.message);
+        }
     }
 }
 
