@@ -7,10 +7,6 @@ const {
     verifyEmail,
     resetPassword,
     changePassword,
-    getUserProfile,
-    getAllUsers,
-    updateUserProfile,
-    deleteUserAccount,
 } = require('../controllers/auth-controller');
 
 // middleware to check if the user is authenticated
@@ -28,13 +24,5 @@ router.post('/verify-email', validateEmail, verifyEmail);
 
 router.post('/reset-password', validateToken, validatePassword, resetPassword);
 router.post('/change-password', validateToken, validatePassword, changePassword);
-
-router.get('/users', validateToken, getAllUsers); // For admin users
-router.get('/user-profile/:id', validateToken, getUserProfile);
-router.get('/user-profile', validateToken, getUserProfile); // For logged-in users
-
-router.put('/update-profile/:id', validateToken, updateUserProfile);
-
-router.delete('/delete-account/:id', validateToken, deleteUserAccount);
 
 module.exports = router;
