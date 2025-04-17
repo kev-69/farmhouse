@@ -1,4 +1,7 @@
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv')
+dotenv.config();
 
 /**
  * Generates a verification token for a user.
@@ -6,8 +9,7 @@ const crypto = require('crypto');
  * @returns {string} - The generated verification token.
  */
 function generateVerificationToken(userId) {
-    const token = crypto.randomBytes(32).toString('hex'); // Generate a random 32-byte token
-    return `${userId}.${token}`; // Combine the user ID with the token
+    return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION }); // Token expires in 1 hour
 }
 
 /**
