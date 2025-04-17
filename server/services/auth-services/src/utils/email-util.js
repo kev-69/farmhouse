@@ -15,7 +15,7 @@ async function sendVerificationEmail(email, verificationToken) {
         });
 
         // Construct the verification URL
-        const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+        const verificationUrl = `http://localhost:3001/verify-email?token=${verificationToken}`;
 
         // Email options
         const mailOptions = {
