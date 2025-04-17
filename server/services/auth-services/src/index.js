@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 // sync database
-sequelize.sync({ force: false }) // force: true will drop the table if it already exists
+sequelize.sync({ force: true }) // force: true will drop the table if it already exists
     .then(() => {
         console.log("Database connected successfully!");
     })
