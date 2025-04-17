@@ -83,23 +83,32 @@ const loginUser = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
     try {
-        const { token } = req.params;
-
+        const { token } = req.query; // Extract token from query parameters
+        console.log('Token:', token);
+        
         // Verify the token
-        const userId = verifyEmailToken(token);
-        if (!userId) {
-            return res.status(400).json({ error: 'Invalid or expired token.' });
-        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
 
         // Update user verification status
-        await UserServices.updateUser(userId, { is_verified: true });
+        const updatedUser = await UserServices.updateUser(userId, { is_verified: true });
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
 
-        res.status(200).json({ message: 'Email verified successfully.' });
+        res.status(200).json({ message: 'Email verified successfully.', userId });
     } catch (error) {
         console.error('Error verifying email:', error);
-        res.status(500).json({ error: 'Internal server error' });
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(400).json({ 
+                error: 'Token has expired. Please request a new verification email.' 
+            });
+        }
+
+        res.status(400).json({ error: 'Invalid or expired token.' });
     }
-}
+};
 
 // for forgot password
 const resetPassword = async (req, res) => {
