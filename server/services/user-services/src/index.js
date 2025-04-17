@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3002;
 const app = express();
 
 // Sync database
-sequelize.sync({ force: true }) // Set `force: true` only for development to drop and recreate tables
+sequelize.sync({ force: false }) // Set `force: true` only for development to drop and recreate tables
   .then(() => {
     console.log('Database synced successfully!');
   })
