@@ -6,7 +6,8 @@ const sequelize = require("../../../shared/config/db-config");
 dotenv.config();
 
 // call the routes
-const authRoutes = require('./routes/auth-routes');
+const userAuthRoutes = require('./routes/user-auth-routes');
+const shopAuthRoutes = require('./routes/shop-auth-routes');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -25,7 +26,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // define the root route
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', userAuthRoutes);
+app.use('/api/auth/shop', shopAuthRoutes);
 
 app.listen(PORT, () => {
   console.log(`Auth service is running on http://localhost:${PORT}`);
