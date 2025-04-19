@@ -3,9 +3,11 @@ const Product = require('../models/product-model')
 const ProductServices = {
     async addProduct(productData) {
         try {
+            console.log('Product data:', productData)
             const product = await Product.create(productData)
             return product
         } catch (error) {
+            console.error('Error creating product:', error)
             throw error
         }
     },
