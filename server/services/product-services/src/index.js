@@ -11,7 +11,7 @@ const productRoutes = require('./routes/product-routes')
 const app = express()
 const PORT = process.env.PORT || 3003
 
-sequelize.sync({ force: false })
+sequelize.sync({ force: false }) // force: true will drop the table if it already exists
     .then(() => {
         console.log('Database connected successfully');
     })
