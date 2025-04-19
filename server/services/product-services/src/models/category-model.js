@@ -16,6 +16,10 @@ const Category = sequelize.define('Category', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    shopId: {
+        type: DataTypes.UUID,
+        allowNull: false, // Ensure every category is tied to a shop
+    },
 },  {
     tableName: 'categories',
     timestamps: true,
