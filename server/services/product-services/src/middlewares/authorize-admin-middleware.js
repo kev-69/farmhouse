@@ -1,0 +1,1 @@
+// middleware to authorize admins and allow them to delete categories
