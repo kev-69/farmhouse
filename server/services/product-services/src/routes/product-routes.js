@@ -12,11 +12,15 @@ const {
 
 // call middlewares
 const upload = require('../middlewares/upload')
+const {
+    verifyShopOwnerRole,
+    verifyProductOwnership
+} = require('../middlewares/product-middlewares')
 
 router.get('/all-products', getAllProducts)
 router.get('/:id', getProductById)
-router.post('/add-product', upload, addProduct) //  store owners can add products
-router.put('/update-product/:id', upload, updateProduct) // store owners can update their products
-router.delete('/delete/:id', deleteProduct) // store owners can delete their products
+router.post('/add-product', verifyShopOwnerRole, upload, addProduct) //  store owners can add products
+router.put('/update-product/:id', verifyProductOwnership, upload, updateProduct) // store owners can update their products
+router.delete('/delete/:id', verifyProductOwnership, deleteProduct) // store owners can delete their products
 
 module.exports = router
