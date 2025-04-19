@@ -12,7 +12,7 @@ const {
 const authorizeShop = require('../middlewares/authorize-shop');
 
 // routes
-router.get('/shops', getAllShops); // For admin users
+router.get('/shops', getAllShops); // For all users
 router.get('/shop-profile/:id', authorizeShop, getShopProfile); // For logged-in shops
 router.put('/update-shop-profile/:id', authorizeShop, updateShopProfile); // Update shop profile
 router.delete('/delete-shop-account/:id', authorizeShop, deleteShopAccount); // Delete shop account
