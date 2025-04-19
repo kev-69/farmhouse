@@ -5,6 +5,8 @@ dotenv.config()
 
 const addCategory = async (req, res) => {
     const { category_name, description } = req.body
+    const { shopId } = req.user // Assuming the shopId is in the token payload
+    // console.log('Shop ID:', shopId); // Debug log
     try {
         // validate inputs
         await check('category_name').notEmpty().withMessage('Category name is required').run(req);
@@ -22,17 +24,20 @@ const addCategory = async (req, res) => {
         }
 
         // create the category
-        const newCategory = await CategoryServices.addCategory({ category_name, description })
+        const newCategory = await CategoryServices.addCategory({ category_name, description, shopId })
         
         res.status(201).json({ message: 'Category successfully added', newCategory })
     } catch(error) {
+        console.error('Error adding category:', error); // Debug log
         res.status(500).json({ message: 'Error adding category', error })
     }
 }
 
-const updateCategoryById = async (req, res) => {
-    const categoryId = req.params.id;
+const updateCategory = async (req, res) => {
+    const id = req.params.id;
     const { category_name, description } = req.body;
+    const { shopId } = req.user // Assuming the shopId is in the token payload
+    // console.log('Shop ID:', shopId); // Debug log
     try {
         // validate inputs if they are provided
         if (category_name !== undefined) {
@@ -52,11 +57,15 @@ const updateCategoryById = async (req, res) => {
         if (category_name !== undefined) updateData.category_name = category_name;
         if (description !== undefined) updateData.description = description;
 
+        // console.log('Category ID:', id); // Debug log
+        // console.log('Update Data:', updateData); // Debug log
+
         // Update the category
-        const updatedCategory = await CategoryServices.updateCategoryById(categoryId, updateData);
+        const updatedCategory = await CategoryServices.updateCategoryById(id, updateData);
 
         res.status(200).json({ message: 'Category updated successfully', updatedCategory });
     } catch (error) {
+        console.error('Error updating category:', error); // Debug log
         res.status(500).json({ message: "Error updating category", error });
     }
 };
@@ -64,6 +73,8 @@ const updateCategoryById = async (req, res) => {
 const removeCategoryById = async (req, res) => {
     try {
         const categoryId = req.params.id;
+        const { shopId } = req.user // Assuming the shopId is in the token payload
+        // console.log('Shop ID:', shopId); // Debug log
 
         // Check if the category exists
         const existingCategory = await CategoryServices.getCategoryById(categoryId);
@@ -76,6 +87,7 @@ const removeCategoryById = async (req, res) => {
 
         res.status(200).json({ message: 'Category removed successfully' });
     } catch (error) {
+        console.error('Error removing category:', error);
         res.status(500).json({ message: 'Error removing category', error });
     }
 }
@@ -91,7 +103,7 @@ const getAllCategories = async (req, res) => {
 
 module.exports = {
     addCategory,
-    updateCategoryById,
+    updateCategory,
     removeCategoryById,
     getAllCategories
 }
