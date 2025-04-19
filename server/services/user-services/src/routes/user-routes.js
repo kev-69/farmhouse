@@ -9,10 +9,11 @@ const {
 } = require('../controllers/user-controller');
 
 // middleware to check if the user is authenticated
-const validateToken = require('../middlewares/token-middleware')
+const validateToken = require('../middlewares/token-middleware');
+const authorizeAdmin = require('../../../../shared/middlewares/authorize-admin');
 
 // routes
-router.get('/users', validateToken, getAllUsers); // For admin users
+router.get('/all-users', authorizeAdmin, getAllUsers); // For admin users
 router.get('/user-profile/:id', validateToken, getUserProfile);
 router.get('/user-profile', validateToken, getUserProfile); // For logged-in users
 
