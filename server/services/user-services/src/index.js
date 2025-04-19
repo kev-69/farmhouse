@@ -8,6 +8,7 @@ dotenv.config();
 // call the routes
 const userRoutes = require('./routes/user-routes');
 const addressRoutes = require('./routes/address-routes');
+const shopRoutes = require('./routes/shop-routes');
 
 const PORT = process.env.PORT || 3002;
 const app = express();
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 // define the root route
 app.use('/api/user', userRoutes);
 app.use('/api/user', addressRoutes);
+app.use('/api/shop', shopRoutes);
 
 app.listen(PORT, () => {
   console.log(`User service is running on http://localhost:${PORT}`);
