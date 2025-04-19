@@ -1,1 +1,0 @@
-// middleware to authorize shops and allow them to create products and categories
