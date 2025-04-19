@@ -11,7 +11,7 @@ const productRoutes = require('./routes/product-routes')
 const app = express()
 const PORT = process.env.PORT || 3003
 
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
     .then(() => {
         console.log('Database connected successfully');
     })
