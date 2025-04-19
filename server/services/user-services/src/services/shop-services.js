@@ -1,16 +1,6 @@
 const Shop = require('../models/shop-model');
-// const User = require('../models/user-model');
 
 const ShopServices = {
-    async addShop(shopData) {
-        try {
-            const shop = await Shop.create(shopData);
-            return shop;
-        } catch (error) {
-            throw error;
-        }
-    },
-
     async removeShop(id) {
         try {
             const shop = await Shop.findByPk(id);
@@ -63,17 +53,12 @@ const ShopServices = {
         }
     },
 
-    async getShopByName(shop_name) {
+    async contShops() {
         try {
-            const shop = await Shop.findOne(shop_name);
-        
-            if (!shop) {
-                throw new Error('Shop not found')
-            }
-
-            return shop
+            const count = await Shop.count();
+            return count;
         } catch (error) {
-            throw error
+            throw error;
         }
     }
 }
