@@ -25,15 +25,18 @@ const CategoryServices = {
         }
     },
     
-    async updateCategoryById(id, categoryData) {
+    async updateCategoryById(id, updateData) {
         try {
+            // console.log('Updating Category ID:', id); // Debug log
+            // console.log('Update Data:', updateData); // Debug log
+
             const category = await Category.findByPk(id)
 
             if (!category) {
                 throw new Error('Category not found')
             }
 
-            await category.update(categoryData)
+            await category.update(updateData)
             return category
         } catch (error) {
             throw error
