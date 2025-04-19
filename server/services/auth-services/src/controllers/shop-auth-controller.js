@@ -60,19 +60,19 @@ const loginShop = async (req, res) => {
         const { shop_email, shop_password } = req.body;
 
         // Check if shop exists
-        const existingShop = await ShopServices.getShopByEmail(shop_email);
-        if (!existingShop) {
+        const shop = await ShopServices.getShopByEmail(shop_email);
+        if (!shop) {
             return res.status(400).json({ error: 'Shop not found with this email.' });
         }
 
         // Check password
-        const isPasswordValid = await bcrypt.compare(shop_password, existingShop.shop_password);
+        const isPasswordValid = await bcrypt.compare(shop_password, shop.shop_password);
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Invalid password.' });
         }
 
         // Generate JWT token
-        const token = jwt.sign({ id: existingShop.id, role: existingShop.role }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
+        const token = jwt.sign({ shopId: shop.id, role: shop.role }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
 
         res.status(200).json({ message: 'Login successful.', token });
     } catch (error) {
@@ -109,13 +109,13 @@ const requestPasswordReset = async (req, res) => {
         const { shop_email } = req.body;
 
         // Check if shop exists
-        const existingShop = await ShopServices.getShopByEmail(shop_email);
-        if (!existingShop) {
+        const shop = await ShopServices.getShopByEmail(shop_email);
+        if (!shop) {
             return res.status(400).json({ error: 'Shop not found with this email.' });
         }
 
         // Generate password reset token
-        const passwordResetToken = generatePasswordResetToken(existingShop.id);
+        const passwordResetToken = generatePasswordResetToken(shop.id);
         // Send password reset email
         await sendPasswordResetEmail(shop_email, passwordResetToken);
 
