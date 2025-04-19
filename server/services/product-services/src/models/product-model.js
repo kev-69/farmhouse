@@ -42,6 +42,14 @@ const Product = sequelize.define('Product', {
             isUrl: true,
         }
     },
+    // product_tags: {
+    //     type: DataTypes.ARRAY(DataTypes.STRING),
+    //     allowNull: true,
+    // },
+    shopId: {
+        type: DataTypes.UUID,
+        allowNull: false, // Ensure every product is tied to a shop
+    },
 }, {
     tableName: 'products',
     timestamps: true,
