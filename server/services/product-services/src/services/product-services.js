@@ -1,9 +1,9 @@
 const Product = require('../models/product-model')
 
 const ProductServices = {
-    async addProduct(productData) {
+    async createProduct(productData) {
         try {
-            console.log('Product data:', productData)
+            // console.log('Product data:', productData)
             const product = await Product.create(productData)
             return product
         } catch (error) {
@@ -27,17 +27,26 @@ const ProductServices = {
         }
     },
     
-    async updateProductById(id, productData) {
+    async updateProductById(id, updates) {
         try {
-            const product = await Product.findByPk(id)
-
-            if (!product) {
-                throw new Error('Product not found')
+            // console.log('Product ID:', id); // Debug log
+            // console.log('Updates:', updates); // Debug log
+    
+            const [updatedRowsCount, updatedRows] = await Product.update(updates, {
+                where: { id },
+                returning: true, // Ensure the updated rows are returned
+            });
+    
+            // console.log('Updated Rows Count:', updatedRowsCount); // Debug log
+            // console.log('Updated Rows:', updatedRows); // Debug log
+    
+            if (updatedRowsCount === 0) {
+                return null; // No rows were updated
             }
-
-            await Product.update(productData)
-            return product
+    
+            return updatedRows[0]; // Return the first updated row
         } catch (error) {
+            console.error('Error in updateProductById:', error); // Debug log
             throw error
         }
     },
