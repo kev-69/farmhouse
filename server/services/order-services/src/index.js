@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Call routes
-// const orderRoutes = require('./routes/order-routes');
+const orderRoutes = require('./routes/order-routes');
 const cartRoutes = require('./routes/cart-routes');
 
 
@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.use('/api/cart', cartRoutes);
-// app.use('/api/orders', orderRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Start server
 app.listen(PORT, () => {
