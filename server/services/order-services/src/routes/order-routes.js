@@ -20,10 +20,10 @@ const {
 } = require('../middlewares/order-middlewares')
 
 // routes
-router.get('/history',authenticateUser, getAllOrders)
-router.get('/history/:orderId',authenticateUser, getOrderById)
-router.post('/checkout',authenticateUser, verifyUser, validateCart, createOrder)
-router.put('/update-status/:orderId',authenticateUser, authorizeShop, validateOrderStatus, updateOrder)
-router.delete('/remove-order/:orderId',authenticateUser, authorizeShop, deleteOrder)
+router.get('/history', authenticateUser, getAllOrders)
+router.get('/history/:orderId', authenticateUser, getOrderById)
+router.post('/checkout', authenticateUser, verifyUser, validateCart, createOrder)
+router.put('/update-status/:orderId', authenticateUser, authorizeShop, validateOrderStatus, updateOrder)
+router.delete('/remove-order/:orderId', authenticateUser, authorizeShop, deleteOrder)
 
 module.exports = router
