@@ -8,7 +8,8 @@ const addProduct = async (req, res) => {
     const { shopId } = req.user; // Assuming the shopId is in the token payload
     try {
         const productImages = req.files.map(file => file.path);
-        console.log('Product images:', productImages); // Log the product images
+        // console.log('Product Images:', productImages); // Debug log
+        // console.log('Request Body:', req.body); // Debug log
 
         // Validate inputs
         await check('product_name').notEmpty().withMessage('Product name is required').run(req);
@@ -19,17 +20,19 @@ const addProduct = async (req, res) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            // console.error('Validation Errors:', errors.array()); // Debug log
             return res.status(400).json({ errors: errors.array() });
         }
 
         // Check if category exists
         const category = await CategoryServices.getCategoryById(category_id);
         if (!category) {
+            // console.error('Invalid Category:', category_id); // Debug log
             return res.status(400).json({ message: 'Invalid category. Category does not exist' });
         }
 
         // Create product
-        const newProduct = await ProductServices.addProduct({
+        const newProduct = await ProductServices.createProduct({
             product_name,
             description,
             price,
@@ -40,6 +43,7 @@ const addProduct = async (req, res) => {
         });
 
         if (!newProduct) {
+            console.error('Error Creating Product:', newProduct); // Debug log
             return res.status(400).json({ message: 'Error creating product' });
         }
 
