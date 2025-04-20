@@ -19,8 +19,8 @@ const {
 
 router.get('/all-products', getAllProducts)
 router.get('/:id', getProductById)
-router.post('/add-product', verifyShopOwnerRole, upload, addProduct) //  store owners can add products
-router.put('/update-product/:id', verifyProductOwnership, upload, updateProduct) // store owners can update their products
-router.delete('/delete/:id', verifyProductOwnership, deleteProduct) // store owners can delete their products
+router.post('/add-product', verifyShopOwnerRole, upload, addProduct) //  you need to own a shop to add a product
+router.put('/update-product/:id', verifyShopOwnerRole, verifyProductOwnership, upload, updateProduct) // you need to own that shop and product to update it
+router.delete('/delete-product/:id', verifyShopOwnerRole, verifyProductOwnership, deleteProduct) // you need to own that shop and product to delete it
 
 module.exports = router
