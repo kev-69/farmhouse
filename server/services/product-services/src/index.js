@@ -23,6 +23,10 @@ sequelize.sync({ force: false }) // force: true will drop the table if it alread
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use((err, req, res, next) => {
+    console.error('Unhandled Error:', err); // Log the error
+    res.status(500).json({ message: 'Internal server error', error: err.message });
+});
 
 // product routes
 app.use('/api/category', categoryRoutes)
