@@ -3,15 +3,21 @@ const OrderItem = require('../models/order-items-model');
 const sequelize = require('../config/ordersdb-config')
 
 const OrderServices = {
-    async createOrder(orderData) {
+    async createOrder(orderData, orderDataItems) {
         const transaction = await sequelize.transaction()
         try {
+            console.log('Order Data:', orderData); // Debug log
+            console.log('Order Data Items:', orderDataItems); // Debug log
+            if (!orderData || orderDataItems.length === 0) {
+                throw new Error('Order items cannot be empty');
+            }
+            
             const order = await Order.create(orderData, { transaction });
 
             // create order items
-            const orderItems = orderData.items.map(item => ({
+            const orderItems = orderDataItems.map(item => ({
                 order_id: order.id,
-                product_id: item.product_id,
+                product_id: item.productId,
                 quantity: item.quantity,
                 price: item.price,
             }));
