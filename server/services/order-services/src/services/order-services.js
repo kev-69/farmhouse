@@ -49,7 +49,7 @@ const OrderServices = {
     async getAllOrders() {
         try {
             const orders = await Order.findAll({
-                include: [{ model: OrderItem, as: 'items' }],
+                include: [{ model: OrderItem }],
             });
             return orders;
         } catch (error) {
