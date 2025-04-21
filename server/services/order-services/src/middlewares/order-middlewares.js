@@ -1,3 +1,5 @@
+const { getCart } = require('../controllers/cart-controller'); // Assuming you have a service to get the cart
+
 const validateOrderStatus = (req, res, next) => {
     const validStatuses = ['pending', 'processing', 'completed', 'cancelled'];
     const { status } = req.body; // Assuming status is sent in the request body
@@ -10,8 +12,8 @@ const validateOrderStatus = (req, res, next) => {
 }
 
 const verifyUser = (req, res, next) => {
-    const { is_verified } = req.user; // Assuming `isVerified` is part of the token payload or fetched from the database
-    if (!is_verified) {
+    const { verified } = req.user; // Assuming `isVerified` is part of the token payload or fetched from the database
+    if (!verified) {
         return res.status(403).json({ message: 'Email verification required to place an order.' });
     }
     next();
@@ -26,10 +28,11 @@ const authorizeShop = (req, res, next) => {
 }
 
 const validateCart = async (req, res, next) => {
-    const { userId } = req.user; // Assuming `userId` is in the token payload
+    const { id } = req.user; // Assuming `userId` is in the token payload
+    const userId = id; // Use the userId from the token or request object
     const cart = await getCart(userId); // Fetch cart from Redis or database
 
-    if (!cart || cart.products.length === 0) {
+    if (!cart) {
         return res.status(400).json({ message: 'Cart is empty' });
     }
 
@@ -49,5 +52,5 @@ module.exports = {
     verifyUser,
     validateOrderStatus,
     authorizeShop,
-    validateCart
+    // validateCart
 }
