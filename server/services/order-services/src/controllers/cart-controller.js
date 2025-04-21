@@ -3,13 +3,15 @@ const redisClient = require('../config/redis-config');
 const addToCart = async (req, res) => {
     try {
         // console.log('Redis Client Status:', redisClient.isOpen ? 'Open' : 'Closed'); // Debug log
-        const { user_id, product_id, quantity, price } = req.body;
-        if (!user_id || !product_id || !quantity || !price) {
+        const { id } = req.user; // Extract user_id from the token
+        const user_id = id; // Use the user_id from the token
+        const {product_id, quantity, price } = req.body;
+        if (!product_id || !quantity || !price) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
         // Ensure the user_id matches the token's user_id
-        if (user_id !== req.user.id) {
+        if (!user_id) {
             return res.status(403).json({ message: 'Forbidden: User ID mismatch' });
         }
 
@@ -19,6 +21,7 @@ const addToCart = async (req, res) => {
 
         // Add item to cart in Redis
         await redisClient.hSet(cartKey, itemKey, JSON.stringify(cartData));
+        
         return res.status(200).json({ message: 'Item added to cart successfully', cartData });
     } catch (error) {
         console.error('Error adding to cart:', error);
