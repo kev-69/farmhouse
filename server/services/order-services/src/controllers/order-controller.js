@@ -61,7 +61,7 @@ const updateOrder = async (req, res) => {
         const { orderId } = req.params;
         const { order_status } = req.body;
         // Validate order status
-        if (!order_status || !['pending', 'completed', 'cancelled'].includes(order_status)) {
+        if (!order_status || !['pending', 'shipped', 'delivered', 'cancelled'].includes(order_status)) {
             return res.status(400).json({ message: 'Invalid order status' });
         }
 
