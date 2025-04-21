@@ -2,7 +2,6 @@ const OrderService = require('../services/order-services');
 const redisClient = require('../config/redis-config');
 const Order = require('../models/order-model');
 const OrderItem = require('../models/order-items-model');
-const { use } = require('../routes/order-routes');
 
 // Create a new order: same as checkout
 const createOrder = async (req, res) => {
@@ -12,29 +11,40 @@ const createOrder = async (req, res) => {
 
         // Fetch cart items from Redis
         const cartItems = await redisClient.hGetAll(cartKey);
-        if (!cartItems) {
-            return res.status(404).json({ message: 'Cart not found' });
+        console.log('Cart Items:', cartItems); // Debug log
+
+        if (!cartItems || Object.keys(cartItems).length === 0) {
+            return res.status(404).json({ message: 'Cart not found or empty' });
         }
 
-        const items = Object.values(cartItems).map(item => JSON.parse(item));
+        // Parse cart items into an array
+        const orderDataItems = Object.values(cartItems).map(item => {
+            try {
+                return JSON.parse(item);
+            } catch (error) {
+                console.error('Error parsing cart item:', error);
+                return null;
+            }
+        }).filter(item => item !== null); // Filter out any invalid items
+        console.log('Parsed Items:', orderDataItems);
 
         // Check if cart is empty
-        if (items.length === 0) {
+        if (orderDataItems.length === 0) {
             return res.status(400).json({ message: 'Cart is empty' });
         }
 
         // Calculate total amount
-        const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-        const user_id = id; // Use the user_id from the token
+        const totalAmount = orderDataItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
         // Create order
         const orderData = {
-            user_id,
+            user_id: id,
             total_amount: totalAmount,
             order_status: 'pending', // Default status
         };
-        const order = await OrderService.createOrder(orderData);
+
+        // Create order in the database
+        const order = await OrderService.createOrder(orderData, orderDataItems);
 
         // Clear cart in Redis after checkout
         await redisClient.del(cartKey);
