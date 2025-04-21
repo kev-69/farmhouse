@@ -1,10 +1,10 @@
 const { getCart } = require('../controllers/cart-controller'); // Assuming you have a service to get the cart
 
 const validateOrderStatus = (req, res, next) => {
-    const validStatuses = ['pending', 'processing', 'completed', 'cancelled'];
-    const { status } = req.body; // Assuming status is sent in the request body
+    const validStatuses = ['pending', 'shipped', 'delivered', 'cancelled'];
+    const { order_status } = req.body; // Assuming status is sent in the request body
 
-    if (!validStatuses.includes(status)) {
+    if (!validStatuses.includes(order_status)) {
         return res.status(400).json({ message: 'Invalid order status' });
     }
 
