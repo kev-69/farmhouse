@@ -23,7 +23,7 @@ const {
 router.get('/history', authenticateUser, getAllOrders)
 router.get('/history/:orderId', authenticateUser, getOrderById)
 router.post('/checkout', authenticateUser, verifyUser, createOrder)
-router.put('/update-status/:orderId', authenticateUser, authorizeShop, validateOrderStatus, updateOrder)
-router.delete('/remove-order/:orderId', authenticateUser, authorizeShop, deleteOrder)
+router.put('/update-status/:orderId', authenticateUser, authorizeShop, validateOrderStatus, updateOrder) // shop owner only can update order status
+router.delete('/remove-order/:orderId', authenticateUser, authorizeShop, deleteOrder) // shop owner only can delete order
 
 module.exports = router
